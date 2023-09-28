@@ -1,7 +1,6 @@
 .map {
-  width: 80%;
-  height: 80%;
-  margin-left: 5%;
+  width: 90%;
+  height: 90%;
 }
 
 svg.map {
@@ -14,7 +13,13 @@ svg.map a:visited {
 }
 
 svg.map a :hover {
-  fill: #000;
+  stroke-width: 15px;
+  stroke-linejoin: round;
+  stroke: #000;
+}
+
+.info {
+  display: none;
 }
 
 /*# sourceMappingURL=index.9e4c6fd2.css.map */

@@ -618,10 +618,10 @@ function RysujRozkladyWOkregu(wynik, okreg) {
     const text = document.createElement("h2");
     text.innerHTML = okreg.miasto;
     text.setAttribute("id", okreg.miasto);
-    document.getElementsByTagName("body")[0].appendChild(text);
+    document.getElementById("analizy").appendChild(text);
     const histogramKontener = document.createElement("div");
     histogramKontener.setAttribute("style", "width: 20%;  display: flex;");
-    document.getElementsByTagName("body")[0].appendChild(histogramKontener);
+    document.getElementById("analizy").appendChild(histogramKontener);
     Object.entries(sredniaSondazy).forEach(([partia, procent])=>{
         const elementName = okreg.miasto + "Histogram" + partia;
         const wykresHistogram = document.createElement("canvas");
@@ -632,7 +632,7 @@ function RysujRozkladyWOkregu(wynik, okreg) {
     if ((0, _komentarz.komentarze)[okreg.miasto].msg) {
         const komentarz = document.createElement("p");
         komentarz.innerHTML = (0, _komentarz.komentarze)[okreg.miasto].msg;
-        document.getElementsByTagName("body")[0].appendChild(komentarz);
+        document.getElementById("analizy").appendChild(komentarz);
     }
     // const jedenHistogramKontener = document.createElement("div");
     // const jedenWykresHistogram = document.createElement("canvas");
@@ -650,13 +650,12 @@ function RysujRozkladyWOkregu(wynik, okreg) {
     const naglowek = document.createElement("h3");
     kontener.setAttribute("style", "width: 35%; margin-left: 10%; margin-bottom: 100px; display: flex;");
     naglowek.innerHTML = "Prawdopodobieństwo podziału mandat\xf3w";
-    naglowek.setAttribute("style", "margin-left: 40%;");
-    document.getElementsByTagName("body")[0].appendChild(naglowek);
+    document.getElementById("analizy").appendChild(naglowek);
     wykres.setAttribute("id", "Miasto" + okreg.miasto);
     wykresDemo.setAttribute("id", "Miasto" + okreg.miasto + "Demo");
     kontener.appendChild(wykres);
     kontener.appendChild(wykresDemo);
-    document.getElementsByTagName("body")[0].appendChild(kontener);
+    document.getElementById("analizy").appendChild(kontener);
     (0, _wykresy.rysujWynikWyborow)(wykresRozkladu, "Miasto" + okreg.miasto, {
         poziomo: true,
         laczOpozycje: true
@@ -669,20 +668,30 @@ function RysujRozkladyWOkregu(wynik, okreg) {
 (async function() {
     let nrOkregu = 1;
     (0, _dane.okregi).forEach((okreg)=>{
-        // const text = document.createElement("a");
-        // text.innerHTML =
-        //   okreg.miasto + ` (${nrOkregu}):` + komentarze[okreg.miasto].komitet.toString();
-        // text.href = `#${okreg.miasto}`;
-        // text.className = "grid-item";
-        // document.getElementById("miasta").appendChild(text);
-        // nrOkregu++;
+        const text = document.createElement("div");
+        text.innerHTML = `<h2>${okreg.miasto} (${nrOkregu})</h2>` + `<p>${(0, _komentarz.komentarze)[okreg.miasto].msg}</p>` + `kliknij w mapkę aby zobaczyć szczegóły`;
+        text.href = `#${okreg.miasto}`;
+        text.id = `${okreg.miasto}Info`;
+        text.className = "info";
+        document.getElementById("Info").appendChild(text);
+        const icon = document.getElementById(okreg.miasto + "Icon");
+        icon.addEventListener("mouseover", ()=>{
+            text.style.display = "block";
+        });
+        icon.addEventListener("mouseout", ()=>{
+            text.style.display = "none";
+        });
+        nrOkregu++;
         const rekomendacje = (0, _komentarz.komentarze)[okreg.miasto].komitet;
         if (rekomendacje.length) {
             if (rekomendacje.length > 1) {
                 const aElement = document.getElementById(okreg.miasto + "Icon");
                 const path = aElement.getElementsByTagName("path")[0];
                 path.setAttribute("fill", `url(#stripes${rekomendacje[0].toLocaleLowerCase()}${rekomendacje[1].toLocaleLowerCase()})`);
-            } else document.getElementById(okreg.miasto + "Icon").style.fill = (0, _dane.KOLOR_PARTII)[(0, _komentarz.komentarze)[okreg.miasto].komitet[0]];
+            } else {
+                console.log(okreg.miasto);
+                document.getElementById(okreg.miasto + "Icon").style.fill = (0, _dane.KOLOR_PARTII)[(0, _komentarz.komentarze)[okreg.miasto].komitet[0]];
+            }
         }
     });
     (0, _wykresy.rysujWynikWyborow)((0, _dane.sondaze), "sondaze", {
