@@ -3026,15 +3026,12 @@ function rysujHistogram(histogram, targetElement, color = "rgb(150, 195, 110)", 
         }
     });
     const procentyOczekiwanych = histogram.filter((value)=>value.mandaty === oczekiwaneMandaty);
-    const minProcentDoOczekiwanych = procentyOczekiwanych.reduce((acc, curr)=>extractProcent(curr.procent) < extractProcent(acc.procent) ? curr : acc);
-    const maxProcentDoOczekiwanych = procentyOczekiwanych.reduce((acc, curr)=>extractProcent(curr.procent) > extractProcent(acc.procent) ? curr : acc);
+    const minProcentDoOczekiwanych = procentyOczekiwanych.reduce((acc, curr)=>curr.procent < acc.procent ? curr : acc);
+    const maxProcentDoOczekiwanych = procentyOczekiwanych.reduce((acc, curr)=>curr > acc ? curr : acc);
     const tekst = document.createElement("p");
     tekst.setAttribute("style", "margin-bottom: 100px; ");
     tekst.innerHTML = `Jeśli ${nazwa} otrzyma od ${minProcentDoOczekiwanych.procent}% do ${maxProcentDoOczekiwanych.procent}% głosów, to zdobędzie ${oczekiwaneMandaty} ${odmianaSlowaMandat(oczekiwaneMandaty)}.`;
     document.getElementById(targetElement).appendChild(tekst);
-}
-function extractProcent(procent) {
-    return Number(procent.split("%")[0]);
 }
 
 },{"./dane":"eVCRG","chart.js/auto":"2Drpo","color":"3WAfK","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./typy":"cF30z"}],"2Drpo":[function(require,module,exports) {
