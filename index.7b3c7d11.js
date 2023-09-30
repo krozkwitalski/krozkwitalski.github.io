@@ -601,54 +601,34 @@ const podzialWOkregachDemo = {};
 });
 function RysujRozkladyWOkregu(wynik, okreg) {
     // console.log(wynik, okreg);
-    const { rozklad, histogram, wynikWOkregu } = (0, _ordynacja.RozkladPrawdopodobienstwaWOkregu)(sredniaSondazy, okreg, {
+    const { rozklad: rozkladDemo } = (0, _ordynacja.RozkladPrawdopodobienstwaWOkregu)(sredniaSondazy, okreg, {
         laczOpozycje: true
     });
-    const wykresRozkladu = {};
-    rozklad.slice(0, 3).forEach(({ key, value })=>{
-        wykresRozkladu[(value / ((0, _typy.ILE_SYMULACJI) / 100)).toString() + "%"] = JSON.parse(key);
-    });
-    const { rozklad: rozkladDemo } = (0, _ordynacja.RozkladPrawdopodobienstwaWOkregu)(sredniaSondazy, okreg, {
-        laczOpozycje: false
-    });
     const wykresRozkladuDemo = {};
-    rozkladDemo.slice(0, 6).forEach(({ key, value })=>{
+    rozkladDemo.slice(0, 3).forEach(({ key, value })=>{
         wykresRozkladuDemo[(value / ((0, _typy.ILE_SYMULACJI) / 100)).toString() + "%"] = JSON.parse(key);
     });
-    const text = document.createElement("h2");
-    text.innerHTML = okreg.miasto;
-    text.setAttribute("id", okreg.miasto);
-    document.getElementById("analizy").appendChild(text);
-    const histogramKontener = document.createElement("div");
-    histogramKontener.setAttribute("style", "width: 20%;  display: flex;");
-    document.getElementById("analizy").appendChild(histogramKontener);
-    Object.entries(sredniaSondazy).forEach(([partia, procent])=>{
-        const elementName = okreg.miasto + "Histogram" + partia;
-        const wykresHistogram = document.createElement("canvas");
-        wykresHistogram.setAttribute("id", elementName);
-        histogramKontener.appendChild(wykresHistogram);
-        (0, _wykresy.rysujHistogram)(histogram[partia], elementName, (0, _dane.KOLOR_PARTII)[partia], partia, (Math.round(wynikWOkregu[partia] * 5) / 5).toString());
+    const { rozklad, histogram, wynikWOkregu } = (0, _ordynacja.RozkladPrawdopodobienstwaWOkregu)(sredniaSondazy, okreg, {
+        laczOpozycje: false
     });
+    const wykresRozkladu = {};
+    rozklad.slice(0, 6).forEach(({ key, value })=>{
+        wykresRozkladu[(value / ((0, _typy.ILE_SYMULACJI) / 100)).toString() + "%"] = JSON.parse(key);
+    });
+    const header = document.createElement("h2");
+    header.innerHTML = okreg.miasto;
+    header.setAttribute("id", okreg.miasto);
+    document.getElementById("analizy").appendChild(header);
     if ((0, _komentarz.komentarze)[okreg.miasto].msg) {
         const komentarz = document.createElement("p");
         komentarz.innerHTML = (0, _komentarz.komentarze)[okreg.miasto].msg;
         document.getElementById("analizy").appendChild(komentarz);
     }
-    // const jedenHistogramKontener = document.createElement("div");
-    // const jedenWykresHistogram = document.createElement("canvas");
-    // jedenWykresHistogram.setAttribute("id", okreg.miasto + "HistogramJeden");
-    // jedenWykresHistogram.setAttribute("style", "width: 100%;");
-    // jedenHistogramKontener.appendChild(jedenWykresHistogram);
-    // document.getElementsByTagName("body")[0].appendChild(jedenHistogramKontener);
-    // rysujJedenHistogram(histogram, okreg.miasto + "HistogramJeden");
-    // Object.entries(histogram).forEach(([partia, poparcie]) => {
-    //     partia <- TODO - transform data to have it in Sondaze format
-    // });
     const kontener = document.createElement("div");
     const wykres = document.createElement("canvas");
     const wykresDemo = document.createElement("canvas");
     const naglowek = document.createElement("h3");
-    kontener.setAttribute("style", "width: 35%; margin-left: 10%; margin-bottom: 100px; display: flex;");
+    kontener.setAttribute("style", "width: 35%; margin-left: 10%; display: flex;");
     naglowek.innerHTML = "Prawdopodobieństwo podziału mandat\xf3w";
     document.getElementById("analizy").appendChild(naglowek);
     wykres.setAttribute("id", "Miasto" + okreg.miasto);
@@ -656,23 +636,37 @@ function RysujRozkladyWOkregu(wynik, okreg) {
     kontener.appendChild(wykres);
     kontener.appendChild(wykresDemo);
     document.getElementById("analizy").appendChild(kontener);
-    (0, _wykresy.rysujWynikWyborow)(wykresRozkladu, "Miasto" + okreg.miasto, {
+    const tekst = document.createElement("p");
+    tekst.setAttribute("style", "margin-bottom: 50px; ");
+    tekst.innerHTML = interpretacjaWykresuRozkladuDemo(wykresRozkladuDemo, okreg);
+    document.getElementById("analizy").appendChild(tekst);
+    const tekstHistogramy = document.createElement("p");
+    tekstHistogramy.setAttribute("style", "margin-bottom: 15px; ");
+    tekstHistogramy.innerHTML = "Wykresy poniżej pokazują prawdopodobieństwo poparcia danej partii. Im wyższy słupek, tym większa szansa, że partia dostanie określony procent głos\xf3w.";
+    document.getElementById("analizy").appendChild(tekstHistogramy);
+    rysujHistogramy(okreg, histogram, wynikWOkregu);
+    (0, _wykresy.rysujWynikWyborow)(wykresRozkladuDemo, "Miasto" + okreg.miasto, {
         poziomo: true,
         laczOpozycje: true
     });
-    (0, _wykresy.rysujWynikWyborow)(wykresRozkladuDemo, "Miasto" + okreg.miasto + "Demo", {
+    (0, _wykresy.rysujWynikWyborow)(wykresRozkladu, "Miasto" + okreg.miasto + "Demo", {
         poziomo: true,
         laczOpozycje: false
     });
 }
-(async function() {
+window.onload = function() {
     let nrOkregu = 1;
     (0, _dane.okregi).forEach((okreg)=>{
         const text = document.createElement("div");
-        text.innerHTML = `<h2>${okreg.miasto} (${nrOkregu})</h2>` + `<p>${(0, _komentarz.komentarze)[okreg.miasto].msg}</p>` + `kliknij w mapkę aby zobaczyć szczegóły`;
-        text.href = `#${okreg.miasto}`;
+        text.innerHTML = `<h2>${okreg.miasto} (${nrOkregu})</h2>` + `<p>${(0, _komentarz.komentarze)[okreg.miasto].msg}</p>` + `<p>kliknij w mapkę aby zobaczyć szczegóły</p>` + `<p> </p>`;
         text.id = `${okreg.miasto}Info`;
         text.className = "info";
+        const graph = document.createElement("div");
+        graph.setAttribute("id", "InfoMiasto" + okreg.miasto);
+        text.appendChild(graph);
+        const graph2 = document.createElement("div");
+        graph2.setAttribute("id", "InfoMiasto2" + okreg.miasto);
+        text.appendChild(graph2);
         document.getElementById("Info").appendChild(text);
         const icon = document.getElementById(okreg.miasto + "Icon");
         icon.addEventListener("mouseover", ()=>{
@@ -688,10 +682,7 @@ function RysujRozkladyWOkregu(wynik, okreg) {
                 const aElement = document.getElementById(okreg.miasto + "Icon");
                 const path = aElement.getElementsByTagName("path")[0];
                 path.setAttribute("fill", `url(#stripes${rekomendacje[0].toLocaleLowerCase()}${rekomendacje[1].toLocaleLowerCase()})`);
-            } else {
-                console.log(okreg.miasto);
-                document.getElementById(okreg.miasto + "Icon").style.fill = (0, _dane.KOLOR_PARTII)[(0, _komentarz.komentarze)[okreg.miasto].komitet[0]];
-            }
+            } else document.getElementById(okreg.miasto + "Icon").style.fill = (0, _dane.KOLOR_PARTII)[(0, _komentarz.komentarze)[okreg.miasto].komitet[0]];
         }
     });
     (0, _wykresy.rysujWynikWyborow)((0, _dane.sondaze), "sondaze", {
@@ -702,22 +693,47 @@ function RysujRozkladyWOkregu(wynik, okreg) {
         laczOpozycje: false,
         calySejm: true
     });
-})();
-setTimeout(function() {
-    (0, _wykresy.rysujWynikWyborow)(podzialWOkregach, "mandatyWOkregach", {
-        poziomo: true,
-        laczOpozycje: false
-    });
-    (0, _wykresy.rysujWynikWyborow)(podzialWOkregachDemo, "mandatyWOkregachDemo", {
-        poziomo: true,
-        laczOpozycje: true
-    });
-}, 200);
-for (const okreg of (0, _dane.okregi)){
-    let i = 0;
     setTimeout(function() {
-        RysujRozkladyWOkregu(sredniaSondazy, okreg);
-    }, ++i * 500);
+        (0, _wykresy.rysujWynikWyborow)(podzialWOkregach, "mandatyWOkregach", {
+            poziomo: true,
+            laczOpozycje: false
+        });
+        (0, _wykresy.rysujWynikWyborow)(podzialWOkregachDemo, "mandatyWOkregachDemo", {
+            poziomo: true,
+            laczOpozycje: true
+        });
+    }, 200);
+    for (const okreg of (0, _dane.okregi)){
+        let i = 0;
+        setTimeout(function() {
+            RysujRozkladyWOkregu(sredniaSondazy, okreg);
+        }, ++i * 500);
+    }
+};
+function rysujHistogramy(okreg, histogram, wynikWOkregu) {
+    const histogramKontener = document.createElement("div");
+    histogramKontener.setAttribute("style", "display: flex;");
+    document.getElementById("analizy").appendChild(histogramKontener);
+    Object.entries(sredniaSondazy).forEach(([partia, procent])=>{
+        if ([
+            "PIS",
+            "KONF"
+        ].includes(partia)) return;
+        const elementName = okreg.miasto + "Histogram" + partia;
+        const wykresHistogram = document.createElement("div");
+        wykresHistogram.setAttribute("id", elementName);
+        wykresHistogram.setAttribute("style", "width: 33%;");
+        histogramKontener.appendChild(wykresHistogram);
+        (0, _wykresy.rysujHistogram)(histogram[partia], elementName, (0, _dane.KOLOR_PARTII)[partia], partia, (Math.round(wynikWOkregu[partia] * 5) / 5).toString());
+        // Rysuj kopię obok mapy
+        if (partia === (0, _komentarz.komentarze)[okreg.miasto].komitet[0]) (0, _wykresy.rysujHistogram)(histogram[partia], "InfoMiasto" + okreg.miasto, (0, _dane.KOLOR_PARTII)[partia], partia, (Math.round(wynikWOkregu[partia] * 5) / 5).toString());
+        if ((0, _komentarz.komentarze)[okreg.miasto].komitet.length > 1 && partia === (0, _komentarz.komentarze)[okreg.miasto].komitet[1]) (0, _wykresy.rysujHistogram)(histogram[partia], "InfoMiasto2" + okreg.miasto, (0, _dane.KOLOR_PARTII)[partia], partia, (Math.round(wynikWOkregu[partia] * 5) / 5).toString());
+    });
+}
+function interpretacjaWykresuRozkladuDemo(wykresRozkladuDemo, okreg) {
+    const podstawowyScenariusz = Object.entries(wykresRozkladuDemo)[0];
+    const drugiScenariusz = Object.entries(wykresRozkladuDemo)[1];
+    return `W okręgu ${okreg.miasto} z prawdopodobieństwem ${podstawowyScenariusz[0]} ` + `demokratyczna opozycja zdobędzie ${podstawowyScenariusz[1].DEMO} ${(0, _wykresy.odmianaSlowaMandat)(podstawowyScenariusz[1].DEMO)} ` + `a PiS i Konfederacja zdobędą ${podstawowyScenariusz[1].NIEDEMO} ${(0, _wykresy.odmianaSlowaMandat)(podstawowyScenariusz[1].NIEDEMO)}. ` + (drugiScenariusz[1].DEMO > podstawowyScenariusz[1].DEMO ? `Jest ${drugiScenariusz[0]} szans, że ` : `Istnieje ${drugiScenariusz[0]} ryzyko, że `) + `demokratyczna opozycja zdobędzie ${drugiScenariusz[1].DEMO} ${(0, _wykresy.odmianaSlowaMandat)(drugiScenariusz[1].DEMO)} ` + `a PiS i Konfederacja zdobędą ${drugiScenariusz[1].NIEDEMO} ${(0, _wykresy.odmianaSlowaMandat)(drugiScenariusz[1].NIEDEMO)}.`;
 }
 
 },{"./typy":"cF30z","./dane":"eVCRG","./ordynacja":"633Rd","./wykresy":"9aQ3q","./komentarz":"g03Kp","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"cF30z":[function(require,module,exports) {
@@ -767,10 +783,17 @@ const KOLOR_PARTII = {
     PIS: "rgb(38, 55, 120)",
     LEWICA: "rgb(255, 0, 0)",
     KONF: "rgb(0, 0, 0)",
-    TD: "rgb(250, 195, 0)",
+    TD: "rgb(220, 195, 16)",
     KO: "#E56701"
 };
 const sondaze = {
+    IBRiS_20230927: {
+        PIS: 35.1,
+        KO: 27.0,
+        TD: 10.4,
+        LEWICA: 10.1,
+        KONF: 9.5
+    },
     IPSOS_20230925: {
         PIS: 36.0,
         KO: 29.0,
@@ -783,7 +806,7 @@ const sondaze = {
         KO: 28.1,
         TD: 9.0,
         LEWICA: 8.7,
-        KONF: 9.0
+        KONF: 8.8
     },
     Estymator_20230923: {
         PIS: 37.3,
@@ -1350,10 +1373,10 @@ var _typy = require("./typy");
 var _random = require("random");
 var _randomDefault = parcelHelpers.interopDefault(_random);
 var _util = require("./util");
-// Odchylenie standardowe zgodnie z ktorym losujemy wyniki
-const STDEV = 2;
+// Odchylenie standardowe w pkt. proc. zgodnie z ktorym losujemy wyniki
+const STDEV = 3;
 // Do jakich wartości rysować wykres
-const ZAKRES = STDEV * 3;
+const ZAKRES = STDEV * 2.5;
 function NaDemo(wynik) {
     return {
         DEMO: wynik.KO + (wynik.LEWICA || 0) + (wynik.TD || 0),
@@ -1368,7 +1391,7 @@ function PoparcieWOkregu(wynik, okreg) {
     for (const [partia, procent] of Object.entries(wynik)){
         let mnoznik = 1;
         if (partia === "TD") {
-            mnoznik = (3 * okreg.wynik2019.PSL + okreg.wynik2019.KO) / 4 / ((3 * (0, _dane.wybory2019).PSL + (0, _dane.wybory2019).KO) / 4);
+            mnoznik = (okreg.wynik2019.PSL / (0, _dane.wybory2019).PSL + okreg.wynik2019.KO / (0, _dane.wybory2019).KO) / 2;
             wynikWOkregu.TD = wynik.TD * mnoznik;
             glosyTD += wynik.TD * okreg.glosy2019 / 100;
             glosyMnoznikTD += wynik.TD * mnoznik * okreg.glosy2019 / 100;
@@ -2837,55 +2860,10 @@ function sortObjectByValues(obj) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "rysujWynikWyborow", ()=>rysujWynikWyborow);
-parcelHelpers.export(exports, "rysujHistogram", ()=>rysujHistogram) // export function rysujJedenHistogram(
- //   histogram: Histogram,
- //   targetElement: string
- // ) {
- //     console.log(histogram);
- //   new Chart(document.getElementById(targetElement) as ChartItem, {
- //     type: "bar",
- //     data: {
- //         // labels: Object.entries(histogram).map(([procent, czestosc]) => procent),
- //       labels: histogram['PIS'].map(({ procent, czestosc }) => procent),
- //       datasets: [
- //               {
- //                 label: "Lewica",
- //                 data: histogram['LEWICA'].map((slupek) => slupek.czestosc),
- //                 backgroundColor: KOLOR_PARTII['LEWICA'],
- //               },
- //               {
- //                 label: "KO",
- //                 data: histogram['KO'].map((slupek) => slupek.czestosc),
- //                 backgroundColor: KOLOR_PARTII['KO'],
- //               },
- //               {
- //                 label: "Trzecia Droga",
- //                 data: histogram['TD'].map((slupek) => slupek.czestosc),
- //                 backgroundColor: KOLOR_PARTII['TD'],
- //               },
- //               {
- //                 label: "Konfederacja",
- //                 data: histogram['KONF'].map((slupek) => slupek.czestosc),
- //                 backgroundColor: KOLOR_PARTII['KONF'],
- //               },
- //               {
- //                 label: "PiS",
- //                 data: histogram['PIS'].map((slupek) => slupek.czestosc),
- //                 backgroundColor: KOLOR_PARTII['PIS'],
- //               },
- //             ],
- //     },
- //     options: {
- //       scales: {
- //         y: {
- //           display: false,
- //         },
- //       },
- //     },
- //   });
- // }
-;
+parcelHelpers.export(exports, "odmianaSlowaMandat", ()=>odmianaSlowaMandat);
+parcelHelpers.export(exports, "rysujHistogram", ()=>rysujHistogram);
 var _dane = require("./dane");
+var _typy = require("./typy");
 var _auto = require("chart.js/auto");
 var _autoDefault = parcelHelpers.interopDefault(_auto);
 var _color = require("color");
@@ -2928,7 +2906,7 @@ function rysujWynikWyborow(wynikWyborow, targetElement, options = {}) {
                     backgroundColor: "#E56701"
                 },
                 {
-                    label: "PiS i Konfederacja",
+                    label: "PiS + Konfederacja",
                     data: Object.values(wynikWyborow).map((wynik)=>wynik.NIEDEMO),
                     backgroundColor: "rgb(38, 55, 120)"
                 }
@@ -2955,51 +2933,111 @@ function rysujWynikWyborow(wynikWyborow, targetElement, options = {}) {
         } : {}
     });
 }
+function odmianaSlowaMandat(mandaty) {
+    return [
+        0,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+    ].includes(mandaty) ? "mandat\xf3w" : mandaty > 1 ? "mandaty" : "mandat";
+}
 function rysujHistogram(histogram, targetElement, color = "rgb(150, 195, 110)", nazwa, procentZSondazy) {
+    const canvas = document.createElement("canvas");
+    document.getElementById(targetElement).appendChild(canvas);
     const oczekiwaneMandaty = histogram.filter((value)=>value.procent === String(procentZSondazy))[0].mandaty;
-    new (0, _autoDefault.default)(document.getElementById(targetElement), {
+    const histogramPlus = histogram.map((poparcie)=>{
+        return {
+            ...poparcie,
+            czestosc: poparcie.mandaty > oczekiwaneMandaty ? poparcie.czestosc : 0
+        };
+    });
+    const histogramMinus = histogram.map((poparcie)=>{
+        return {
+            ...poparcie,
+            czestosc: poparcie.mandaty < oczekiwaneMandaty && Number(poparcie.procent) > 0 ? poparcie.czestosc : 0
+        };
+    });
+    const histogramZero = histogram.map((poparcie)=>{
+        return {
+            ...poparcie,
+            czestosc: poparcie.mandaty === oczekiwaneMandaty && Number(poparcie.procent) > 0 ? poparcie.czestosc : 0
+        };
+    });
+    new (0, _autoDefault.default)(canvas, {
         type: "bar",
         data: {
-            labels: histogram.map(({ procent, czestosc, mandaty })=>`${procent}% -> ${mandaty} mandat${[
-                    0,
-                    5,
-                    6,
-                    7,
-                    8,
-                    9,
-                    10
-                ].includes(mandaty) ? "\xf3w" : mandaty > 1 ? "y" : ""}`),
+            labels: histogram.map(({ procent, czestosc, mandaty })=>`${procent}% -> ${mandaty} ${odmianaSlowaMandat(mandaty)}`),
             datasets: [
                 {
-                    label: nazwa + ": " + procentZSondazy + "%",
-                    data: histogram.map(({ procent, czestosc })=>czestosc),
-                    backgroundColor: histogram.map(({ procent, czestosc, mandaty })=>{
-                        let col = (0, _colorDefault.default)(color);
-                        if (mandaty < oczekiwaneMandaty) col = col.fade(0.7);
-                        else if (mandaty === oczekiwaneMandaty) col = col.fade(0.35);
-                        return col.toString();
-                    })
+                    label: "" + (oczekiwaneMandaty + 1) + " " + odmianaSlowaMandat(oczekiwaneMandaty + 1),
+                    data: histogramPlus.map(({ procent, czestosc })=>czestosc),
+                    backgroundColor: color
+                },
+                {
+                    label: "" + oczekiwaneMandaty + " " + odmianaSlowaMandat(oczekiwaneMandaty),
+                    data: histogramZero.map(({ procent, czestosc })=>czestosc),
+                    backgroundColor: (0, _colorDefault.default)(color).fade(0.35).toString()
                 }
-            ]
+            ].concat(oczekiwaneMandaty > 0 ? [
+                {
+                    label: "" + (oczekiwaneMandaty - 1) + " " + odmianaSlowaMandat(oczekiwaneMandaty - 1),
+                    data: histogramMinus.map(({ procent, czestosc })=>czestosc),
+                    backgroundColor: (0, _colorDefault.default)(color).fade(0.7).toString()
+                }
+            ] : [
+                {
+                    label: "",
+                    data: [],
+                    backgroundColor: "white"
+                }
+            ])
         },
         options: {
+            plugins: {
+                legend: {
+                    title: {
+                        display: true,
+                        text: "Przewidywany wynik w okręgu dla " + nazwa + ": " + procentZSondazy + "%",
+                        color: "black",
+                        font: {
+                            size: 15
+                        }
+                    }
+                }
+            },
             scales: {
                 x: {
                     ticks: {
                         callback: function(value, index, ticks) {
                             return this.getLabelForValue(index).split(" ")[0];
                         }
-                    }
+                    },
+                    stacked: true
                 },
                 y: {
-                    display: false
+                    max: (0, _typy.ILE_SYMULACJI) / 10000 * 410,
+                    display: false,
+                    stacked: true
                 }
             }
         }
     });
+    const procentyOczekiwanych = histogram.filter((value)=>value.mandaty === oczekiwaneMandaty);
+    const minProcentDoOczekiwanych = procentyOczekiwanych.reduce((acc, curr)=>extractProcent(curr.procent) < extractProcent(acc.procent) ? curr : acc);
+    const maxProcentDoOczekiwanych = procentyOczekiwanych.reduce((acc, curr)=>extractProcent(curr.procent) > extractProcent(acc.procent) ? curr : acc);
+    const tekst = document.createElement("p");
+    tekst.setAttribute("style", "margin-bottom: 100px; ");
+    tekst.innerHTML = `Jeśli ${nazwa} otrzyma od ${minProcentDoOczekiwanych.procent}% do ${maxProcentDoOczekiwanych.procent}% głosów, to zdobędzie ${oczekiwaneMandaty} ${odmianaSlowaMandat(oczekiwaneMandaty)}.`;
+    document.getElementById(targetElement).appendChild(tekst);
+}
+function extractProcent(procent) {
+    return Number(procent.split("%")[0]);
 }
 
-},{"./dane":"eVCRG","chart.js/auto":"2Drpo","color":"3WAfK","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"2Drpo":[function(require,module,exports) {
+},{"./dane":"eVCRG","chart.js/auto":"2Drpo","color":"3WAfK","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./typy":"cF30z"}],"2Drpo":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _chartJs = require("../dist/chart.js");
@@ -18714,7 +18752,7 @@ const komentarze = {
         ]
     },
     Wrocław: {
-        msg: "Wyborca Trzeciej Drogi, może dać szansę na dodatkowy mandat dla opozycji we Wrocławiu głosując na KO. Nie odbierze to pewnego mandatu Trzeciej Drodze, a jej szanse na drugi są niewielkie.",
+        msg: "Wyborca Trzeciej Drogi, może dać szansę na dodatkowy mandat dla opozycji we Wrocławiu głosując na KO lub Lewicę. Nie odbierze to pewnego mandatu Trzeciej Drodze, a jej szanse na drugi są niewielkie.",
         komitet: [
             "KO",
             "LEWICA"
@@ -18766,7 +18804,7 @@ const komentarze = {
         ]
     },
     Sieradz: {
-        msg: "Pięć mandat\xf3w dla opozycji jest tutaj pewne, a jednocześnie nie ma przestrzeni na więcej. Można rozważyć głosowanie w kt\xf3rymś z ościennych wojew\xf3dztw.",
+        msg: "Pięć mandat\xf3w dla opozycji jest tutaj pewne, a jednocześnie nie ma przestrzeni na więcej. Można rozważyć głosowanie w kt\xf3rymś z sąsiednich okręg\xf3w.",
         komitet: [
             ""
         ]
@@ -18785,7 +18823,7 @@ const komentarze = {
         ]
     },
     "Nowy Sącz": {
-        msg: "W tym bastionie PiSu Lewica nie ma szans na mandat, więc lepiej aby jej wyborcy wsparli KO, ewentualnie Trzecią Drogę.",
+        msg: "W tym bastionie PiSu Lewica nie ma szans na mandat, więc lepiej aby jej wyborcy wsparli KO lub Trzecią Drogę. Mogą też pojechać do Krakowa lub Rzeszowa i tam zagłosować na Lewicę.",
         komitet: [
             "KO",
             "TD"
@@ -18816,9 +18854,8 @@ const komentarze = {
         ]
     },
     "Warszawa I": {
-        msg: "W tym największym okręgu wyborcy Trzeciej Drogi mogliby przerzucić poparcie na KO lub Lewicę. Ale mogą też rozważyć turystykę wyborczą, gdyż siła głosu jest tutaj dużo mniejsza niż w okolicy.",
+        msg: "W tym największym okręgu wyborcy KO i Trzeciej Drogi mogliby przerzucić poparcie na Lewicę. Ale mogą też rozważyć turystykę wyborczą, gdyż siła głosu jest tutaj dużo mniejsza niż w okolicy.",
         komitet: [
-            "KO",
             "LEWICA"
         ]
     },

@@ -13,7 +13,7 @@ svg.map a:visited {
 }
 
 svg.map a :hover {
-  stroke-width: 15px;
+  stroke-width: 5px;
   stroke-linejoin: round;
   stroke: #000;
 }
