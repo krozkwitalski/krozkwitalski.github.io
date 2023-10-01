@@ -1396,14 +1396,11 @@ function PoparcieWOkregu(wynik, okreg) {
             glosyTD += wynik.TD * okreg.glosy2019 / 100;
             glosyMnoznikTD += wynik.TD * mnoznik * okreg.glosy2019 / 100;
         } else {
-            // if (wybory2019[partia as keyof Wynik]) {
             mnoznik = wynik[partia] / (0, _dane.wybory2019)[partia];
-            // }
             wynikWOkregu[partia] = (okreg.wynik2019[partia] || wynik[partia]) * mnoznik;
         }
         sumaProcentowWOkregu += wynikWOkregu[partia];
     }
-    // console.log(okreg.miasto, sumaProcentowWOkregu);
     return wynikWOkregu;
 }
 function PodzialMandatowKraj(wynik) {
@@ -1421,7 +1418,6 @@ function PodzialMandatowKraj(wynik) {
         const mandatyWOkregu = PodzialMandatowWOkregu(wynikWOkregu, okreg);
         for (const [partia, mandaty] of Object.entries(mandatyWOkregu))mandatyWKraju[partia] += mandaty;
     }
-    // console.log('TD glosy przeliczone', Math.round(glosyMnoznikTD), Math.round(glosyTD))
     return mandatyWKraju;
 }
 function PodzialMandatowWOkregu(wynik, okreg, rozkladRoznic) {
@@ -1441,9 +1437,10 @@ function PodzialMandatowWOkregu(wynik, okreg, rozkladRoznic) {
     }, {});
     return podzial;
 }
-function RozkladPrawdopodobienstwaWOkregu(wynik, okreg, options = {}) {
+function RozkladPrawdopodobienstwaWOkregu(wynik, okreg) {
     const wynikWOkregu = PoparcieWOkregu(wynik, okreg);
     const rozklad = {};
+    const rozkladDemo = {};
     const rozkladRoznic = [];
     const histogram = {};
     for(let i = 1; i <= (0, _typy.ILE_SYMULACJI); i++){
@@ -1463,8 +1460,11 @@ function RozkladPrawdopodobienstwaWOkregu(wynik, okreg, options = {}) {
         }
         // Podział mandatów
         const mandatyWOkregu = PodzialMandatowWOkregu(wynikWOkreguRandom, okreg, rozkladRoznic);
-        const str = options.laczOpozycje ? (0, _util.sortedStringify)(NaDemo(mandatyWOkregu)) : (0, _util.sortedStringify)(mandatyWOkregu);
+        const str = (0, _util.sortedStringify)(mandatyWOkregu);
+        const strDemo = (0, _util.sortedStringify)(NaDemo(mandatyWOkregu));
+        // console.log(str, strDemo);
         rozklad[str] ? rozklad[str]++ : rozklad[str] = 1;
+        rozkladDemo[strDemo] ? rozkladDemo[strDemo]++ : rozklad[strDemo] = 1;
         // Zapisanie mandatów w histogramie
         for (const [partia, procent] of Object.entries(wynikWOkreguRandom))// Sumujemy ilość mandatów dla danego procentu ze wszystkich symulacji.
         histogram[partia][String(procent)].mandaty ? histogram[partia][String(procent)].mandaty += mandatyWOkregu[partia] || 0 : histogram[partia][String(procent)].mandaty = mandatyWOkregu[partia] || 0;
@@ -1473,6 +1473,7 @@ function RozkladPrawdopodobienstwaWOkregu(wynik, okreg, options = {}) {
     for (const [partia, procent] of Object.entries(histogram))histogramSorted[partia] = transformHistogram(histogram[partia]);
     return {
         rozklad: (0, _util.sortObjectByValues)(rozklad),
+        rozkladDemo: (0, _util.sortObjectByValues)(rozkladDemo),
         histogram: histogramSorted,
         wynikWOkregu
     };
@@ -3026,12 +3027,15 @@ function rysujHistogram(histogram, targetElement, color = "rgb(150, 195, 110)", 
         }
     });
     const procentyOczekiwanych = histogram.filter((value)=>value.mandaty === oczekiwaneMandaty);
-    const minProcentDoOczekiwanych = procentyOczekiwanych.reduce((acc, curr)=>curr.procent < acc.procent ? curr : acc);
-    const maxProcentDoOczekiwanych = procentyOczekiwanych.reduce((acc, curr)=>curr > acc ? curr : acc);
+    const minProcentDoOczekiwanych = procentyOczekiwanych.reduce((acc, curr)=>extractProcent(curr) < extractProcent(acc) ? curr : acc);
+    const maxProcentDoOczekiwanych = procentyOczekiwanych.reduce((acc, curr)=>extractProcent(curr) > extractProcent(acc) ? curr : acc);
     const tekst = document.createElement("p");
     tekst.setAttribute("style", "margin-bottom: 100px; ");
-    tekst.innerHTML = `Jeśli ${nazwa} otrzyma od ${minProcentDoOczekiwanych.procent}% do ${maxProcentDoOczekiwanych.procent}% głosów, to zdobędzie ${oczekiwaneMandaty} ${odmianaSlowaMandat(oczekiwaneMandaty)}.`;
+    tekst.innerHTML = `Jeśli ${nazwa} otrzyma od ${Math.max(extractProcent(minProcentDoOczekiwanych), 0)}% do ${maxProcentDoOczekiwanych.procent}% głosów, to zdobędzie ${oczekiwaneMandaty} ${odmianaSlowaMandat(oczekiwaneMandaty)}.`;
     document.getElementById(targetElement).appendChild(tekst);
+}
+function extractProcent(poparcie) {
+    return Number(poparcie.procent);
 }
 
 },{"./dane":"eVCRG","chart.js/auto":"2Drpo","color":"3WAfK","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./typy":"cF30z"}],"2Drpo":[function(require,module,exports) {
