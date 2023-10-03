@@ -1420,28 +1420,45 @@ function PodzialMandatowKraj(wynik) {
     }
     return mandatyWKraju;
 }
-function PodzialMandatowWOkregu(wynik, okreg, rozkladRoznic) {
+function PodzialMandatowWOkregu(wynik, okreg, options) {
     const dhont = [];
     for (const [partia, procent] of Object.entries(wynik))for(let i = 1; i <= 10; i++)dhont.push({
-        partia: partia,
-        iloraz: procent / i
+        partia,
+        iloraz: procent / i,
+        nrMandatu: i
     });
     const posortowanyDhont = dhont.sort((a, b)=>{
         return b.iloraz - a.iloraz;
     });
-    const roznica = (posortowanyDhont[okreg.mandaty - 1].iloraz - posortowanyDhont[okreg.mandaty].iloraz) * okreg.glosy2019 / 100;
-    rozkladRoznic?.push(Math.round(roznica));
+    const ostatniWzietyMandat = posortowanyDhont[okreg.mandaty - 1];
+    const pierwszyNiewzietyMandat = posortowanyDhont[okreg.mandaty];
+    const ilorazBioracy = (0, _dane.glosy2019WgOkregu)[okreg.miasto][ostatniWzietyMandat.partia] / ostatniWzietyMandat.nrMandatu;
+    const ilorazNiebioracy = (0, _dane.glosy2019WgOkregu)[okreg.miasto][pierwszyNiewzietyMandat.partia] / pierwszyNiewzietyMandat.nrMandatu;
+    const roznica = Math.ceil((ilorazBioracy - ilorazNiebioracy) * pierwszyNiewzietyMandat.nrMandatu);
+    // ((ostatniWzietyMandat.iloraz - pierwszyNiewzietyMandat.iloraz) *
+    //   okreg.glosy2019) /
+    // 100;
+    // rozkladRoznic?.push(Math.round(roznica));
     const podzial = posortowanyDhont.slice(0, okreg.mandaty).map((x)=>x.partia).reduce((acc, cur)=>{
         acc[cur] ? acc[cur]++ : acc[cur] = 1;
         return acc;
     }, {});
+    // console.log(optionlog);
+    if (options?.log) // if (["KO", "TD", "LEWICA"].includes(pierwszyNiewzietyMandat.partia) &&
+    // ["PIS", "KONF"].includes(ostatniWzietyMandat.partia)) {
+    console.log(`W okręgu ${okreg.miasto} różnica głosów potrzebna żeby zmienić wynik wynosiła ${roznica}. Liczymy to jako różnicę między ostatnim wprowadzonym posłem (mandat numer #${ostatniWzietyMandat.nrMandatu} 
+        dla ${ostatniWzietyMandat.partia}) a pierwszym niebiorącym miejscem (byłby to mandat #${pierwszyNiewzietyMandat.nrMandatu} 
+        dla ${pierwszyNiewzietyMandat.partia}). Wyliczamy to dzieląc ilorazy (${ilorazBioracy} /
+          ${ilorazNiebioracy}) i mnożąc przez ${pierwszyNiewzietyMandat.nrMandatu}, bo byłby to mandat numer ${pierwszyNiewzietyMandat.nrMandatu} dla ${pierwszyNiewzietyMandat.partia} w tym okręgu.`);
     return podzial;
+}
+function czestoscNaProcentSymulacji(value) {
+    return (Math.round(1000 * (value / (0, _typy.ILE_SYMULACJI))) / 10).toString() + "%";
 }
 function RozkladPrawdopodobienstwaWOkregu(wynik, okreg) {
     const wynikWOkregu = PoparcieWOkregu(wynik, okreg);
     const rozklad = {};
     const rozkladDemo = {};
-    const rozkladRoznic = [];
     const histogram = {};
     for(let i = 1; i <= (0, _typy.ILE_SYMULACJI); i++){
         // Losowanie poparcia dla partii
@@ -1459,23 +1476,30 @@ function RozkladPrawdopodobienstwaWOkregu(wynik, okreg) {
             };
         }
         // Podział mandatów
-        const mandatyWOkregu = PodzialMandatowWOkregu(wynikWOkreguRandom, okreg, rozkladRoznic);
+        const mandatyWOkregu = PodzialMandatowWOkregu(wynikWOkreguRandom, okreg);
         const str = (0, _util.sortedStringify)(mandatyWOkregu);
         const strDemo = (0, _util.sortedStringify)(NaDemo(mandatyWOkregu));
-        // console.log(str, strDemo);
         rozklad[str] ? rozklad[str]++ : rozklad[str] = 1;
-        rozkladDemo[strDemo] ? rozkladDemo[strDemo]++ : rozklad[strDemo] = 1;
+        rozkladDemo[strDemo] ? rozkladDemo[strDemo]++ : rozkladDemo[strDemo] = 1;
         // Zapisanie mandatów w histogramie
         for (const [partia, procent] of Object.entries(wynikWOkreguRandom))// Sumujemy ilość mandatów dla danego procentu ze wszystkich symulacji.
         histogram[partia][String(procent)].mandaty ? histogram[partia][String(procent)].mandaty += mandatyWOkregu[partia] || 0 : histogram[partia][String(procent)].mandaty = mandatyWOkregu[partia] || 0;
     }
     const histogramSorted = {};
     for (const [partia, procent] of Object.entries(histogram))histogramSorted[partia] = transformHistogram(histogram[partia]);
+    const wykresRozkladu = {};
+    (0, _util.sortObjectByValues)(rozklad).slice(0, 6).forEach(({ key, value })=>{
+        wykresRozkladu[czestoscNaProcentSymulacji(value)] = JSON.parse(key);
+    });
+    const wykresRozkladuDemo = {};
+    (0, _util.sortObjectByValues)(rozkladDemo).slice(0, 3).forEach(({ key, value })=>{
+        wykresRozkladuDemo[czestoscNaProcentSymulacji(value)] = JSON.parse(key);
+    });
     return {
-        rozklad: (0, _util.sortObjectByValues)(rozklad),
-        rozkladDemo: (0, _util.sortObjectByValues)(rozkladDemo),
-        histogram: histogramSorted,
-        wynikWOkregu
+        wynikWOkregu,
+        wykresRozkladu,
+        wykresRozkladuDemo,
+        histogram: histogramSorted
     };
 }
 function transformHistogram(obj) {
