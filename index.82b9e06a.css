@@ -1,0 +1,2 @@
+.map{width:90%;height:90%}svg.map{fill:#e3e3e3;stroke:#b0b0b0}svg.map a:visited{fill:#e3e3e3}svg.map a :hover{stroke-width:5px;stroke-linejoin:round;stroke:#000}.info{display:none}.grid-container{grid-template-columns:repeat(6,1fr);gap:10px;display:grid}.grid-item{text-align:center;padding:5px}p{text-align:justify;width:80%;margin-left:10%}#panel{grid-template-columns:2fr 1fr;gap:20px;display:grid}header{color:#fff;text-align:center;background-color:#333;padding:10px}header a{color:#fff;margin:0 10px;text-decoration:none}
+/*# sourceMappingURL=index.82b9e06a.css.map */
