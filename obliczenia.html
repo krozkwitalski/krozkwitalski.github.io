@@ -17,8 +17,11 @@
     <div style="text-align:center;margin:0 auto" class="ramka">
         <h1>Wyjaśnienia obliczeń</h1>
         <p>
-            Nie ma jednej listy - ale mozemy zmaksymalizowac szanse demokratycznej opozycji glosując tak, aby w swoim okręgu
+            Nie ma jednej listy - ale możemy zmaksymalizować szanse demokratycznej opozycji! Głosujmy tak, aby w swoim okręgu
             przechylić szalę na korzyść tej partii, która ma realne szanse zdobycia dodatkowego mandatu dzięki Twojemu głosowi.
+        </p>
+        <p>
+            Trzeba zaznaczyć, że operujemy tutaj na prawdopodobieństwie uzyskania korzystniejszego wyniku a nie pewności. Najważniejsza jest mobilizacja - nasza i każdego kogo możemy namówić na poparcie demokratycznego porządku i poszanowania prawa.
         </p>
         <p>
             To mit, że używana w Polsce do podziału mandatów metoda D'Hondta premiuje duże partie. Daje ona bonus partiom, które dostaną akurat tyle głosów ile potrzeba, aby zdobyć mandaty.
@@ -35,6 +38,11 @@
             <div class="wykres" id="sondaze"></div>
             <div class="wykres" id="mandatyKraj"></div>
         </div>
+
+        <p>
+            Do średniej używanej w obliczeniach wliczamy 7 najnowszych sondaży wykonanych najbardziej wiarygodną metodą rozmów telefonicznych. Głosy niezdecydowanych przyznajemy proporcjonalnie wszystkim komitetom.
+            Bierzemy pod uwagę 5 partii, które mają szanse wprowadzić posłów do sejmu. Scenariusz, w którym Trzecia Droga nie pokonuje progu wyborczego i tak oznaczałaby wygraną PiS, dlatego jego też nie rozważamy.
+        </p>
         
         <p>
             W Polsce w praktyce mamy 41 niezaleznych wyborów w kazdym z 41 okręgów wyborczych. O szczegółach używanej w Polsce
@@ -60,13 +68,14 @@
         <p></p>
         <div style="width:100%" id="mandatyWOkregachDemo"></div>
         <p>
-            Aby ocenić na kogo w danym okręgu warto zagłosować, uśredniliśmy wyniki sondaży wyborczych (tylko tych, które odbyły się po Marszu Miliona Serc),
-            przeliczyliśmy poparcie dla wszystkich komitetów na podstawie wyników wyborów w poszczególnych okręgach z 2019 roku
-            i przeprowadziliśmy po 200'000 symulacji wyników wyborów w każdym okręgu. Każda symulacja losowała wynik dla danej
-            partii
-            zgodnie z rozkładem normalnym, przyjmując odchylenie standardowe trzech punktów procentowych. Tłumacząc ze
-            statystycznego na ludzki (i upraszczająć), zakładamy, że wynik każdej partii w danym okręgu z 95%
-            prawdopodobieństwem będzie w przedziale od -6% do +6% w porównaniu do przeliczonych wyników z sondaży. </p>
+            Aby ocenić na kogo w danym okręgu warto zagłosować, uśredniliśmy wyniki sondaży wyborczych (tylko tych, które odbyły się po Marszu Miliona Serc) i
+            przeliczyliśmy je na głosy na partie w poszczególnych okręgach. Użyliśmy w proporcji jeden do jeden wyniku danej partii z 2019 oraz prognozy rozkładu głosów na okręgi bazując na trendzie z trzech ostatnich wyborów.
+        </p>
+        <p>Dla Trzeciej Drogi użyliśmy w proporcji 1 do 1 poparcia PSL oraz wyniów Szymona Hołownii z 2020 roku. Dla Konfederacji policzyliśmy wyniki z 2015 i 2019 roku oraz wynik Krzysztofa Bosaka z 2020.
+            Przeprowadziliśmy po 200'000 symulacji wyników wyborów w każdym okręgu. Każda symulacja losowała wynik dla danej
+            partii zgodnie z rozkładem normalnym, przyjmując odchylenie standardowe zależne od zmienności poparcia dla partii w okręgach podczas wcześniejszych wyborów oraz wielkości prób w używanych przez nas sondażach wyborczych.
+            Użyte w losowaniach dla każdej partii i okręgu odchylenie standardowe jest oznaczone na wykresach (histogramach) poparcia symbolem sigma (σ). W praktyce - oczekujemy, że w 95%
+            przypadkach faktyczne poparcie dla partii w danym okręgu będzie się różnić od prognozowanego najwyżej o dwukrotność wartości sigma. Dla 41 okręgów i 5 partii spodziewamy się więc wyniku poza prognozowanym zakresem w około 10 przypadkach.</p>
         <p>
             
         </p>
@@ -76,7 +85,7 @@
         </p>
 
         <p>
-            Poniżej natomiast, jest tabelka z wyjściową prognozą wyborczą, wynikającą z przyjętych, uśrednionych wyników sondaży.
+            Poniżej natomiast, jest tabelka z wyjściową prognozą wyborczą, wynikającą z przyjętych, uśrednionych wyników sondaży ogólnokrajowych i naszego modelu podziału głosów na okręgi.
         </p>
         <div id="tabela"></div>
 
