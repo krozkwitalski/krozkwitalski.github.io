@@ -1,0 +1,29 @@
+var t="undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:"undefined"!=typeof window?window:"undefined"!=typeof global?global:{},a={},e={},o=t.parcelRequire94c2;null==o&&((o=function(t){if(t in a)return a[t].exports;if(t in e){var o=e[t];delete e[t];var d={id:t,exports:{}};return a[t]=d,o.call(d.exports,d,d.exports),d.exports}var n=Error("Cannot find module '"+t+"'");throw n.code="MODULE_NOT_FOUND",n}).register=function(t,a){e[t]=a},t.parcelRequire94c2=o);var d=(o("geIQo"),o("geIQo"));o("cWeek");var n=o("a4zWM");function r(t,a,e={}){let o=document.createElement("canvas");document.getElementById(a).appendChild(o),new n.default(o,{type:"bar",data:{labels:Object.entries(t).map(([t,a])=>t.toString()),datasets:e.laczOpozycje?[{label:"Opozycja Demokratyczna",data:Object.values(t).map(t=>t.DEMO),backgroundColor:"#E56701"},{label:"PiS + Konfederacja",data:Object.values(t).map(t=>t.NIEDEMO),backgroundColor:"rgb(128, 0, 32)"}]:[{label:"Lewica",data:Object.values(t).map(t=>t.LEWICA),backgroundColor:d.KOLOR_PARTII.LEWICA},{label:"KO",data:Object.values(t).map(t=>t.KO),backgroundColor:d.KOLOR_PARTII.KO},{label:"Trzecia Droga",data:Object.values(t).map(t=>t.TD),backgroundColor:d.KOLOR_PARTII.TD},{label:"PiS + Konfederacja",data:Object.values(t).map(t=>t.NIEDEMO),backgroundColor:"rgb(128, 0, 32)"}]},options:e?.poziomo?{indexAxis:"y",scales:{x:{stacked:!0,max:e?.calySejm?460:null,afterBuildTicks:e?.calySejm?t=>t.ticks=[0,230,460].map(t=>({value:t})):null},y:{stacked:!0}}}:{}})}o("h5k33");//   return Number(poparcie.procent);
+// }
+// function interpretacjaHistogramu(partia: string, oczekiwaneMandaty: string, histogram: PoparciePartii) {
+//   const procentyOczekiwanych = Object.entries(histogram).filter(
+//     ([ mandaty, czestosc ]) => mandaty === oczekiwaneMandaty
+//   );
+//   const minProcentDoOczekiwanych = procentyOczekiwanych.reduce((acc, curr) =>
+//     extractProcent(curr) < extractProcent(acc) ? curr : acc
+//   );
+//   const maxProcentDoOczekiwanych = procentyOczekiwanych.reduce((acc, curr) =>
+//     extractProcent(curr) > extractProcent(acc) ? curr : acc
+//   );
+//   let tekst = `Jeśli ${partia} otrzyma`;
+//   // Nie podajemy dolnego zakresu, gdy oczekujemy 0 mandatów
+//   tekst += oczekiwaneMandaty
+//     ? ` od ${Math.max(extractProcent(minProcentDoOczekiwanych), 0)}%`
+//     : "";
+//   tekst += ` do ${
+//     maxProcentDoOczekiwanych.procent
+//   }% głosów, to zdobędzie ${oczekiwaneMandaty} ${odmianaSlowaMandat(
+//     oczekiwaneMandaty
+//   )}.`;
+//   return tekst;
+// }
+var l=o("3i35a"),c=o("8VULN");const i={};Object.entries(d.sondaze).forEach(([t,a])=>{i[t]=(0,l.NaPolDemo)(a)}),r({średnia_100:(0,l.NaPolDemo)((0,l.NormalizujWynik)(d.srednia)),średnia:(0,l.NaPolDemo)(d.srednia),...i},"sondaze",{laczOpozycje:!1});const s={};s["średnia"]=(0,l.NaPolDemo)((0,l.PodzialMandatowKraj)(d.sredniaSondazy)),Object.entries(d.sondaze).forEach(([t,a])=>s[t]=(0,l.NaPolDemo)((0,l.PodzialMandatowKraj)(a))),r(s,"mandatyKraj",{poziomo:!0,laczOpozycje:!1,calySejm:!0});const u={},f={},m=document.createElement("p");m.setAttribute("class","symulacje");let p="";for(const t of d.PARTIE)p+=`<td>${t}</td>`;let O="<table>";O+=`<tr><th colspan="3">Okręg wyborczy</th><th colspan="7">Prognoza ilości głos\xf3w (na komitety powyżej progu)</th><th colspan="5">Progonoza podziału mandat\xf3w</th><th colspan="5">Głosy powyżej ceny mandatu</th><th colspan="5">Głosy brakujące do następnego mandatu</th></tr><tr><th>nr</th><th>Nazwa</th><th>Mandaty</th><th>Suma</th>${p}<th>Cena mandatu</th>${p}${p}${p}</tr>`;const y={KO:0,PIS:0,LEWICA:0,TD:0,KONF:0},I={KO:0,PIS:0,LEWICA:0,TD:0,KONF:0},h={KO:0,PIS:0,LEWICA:0,TD:0,KONF:0},P={KO:0,PIS:0,LEWICA:0,TD:0,KONF:0},g={KO:0,PIS:0,LEWICA:0,TD:0,KONF:0};for(const t of((0,d.okregi).forEach(t=>{let a=(0,l.NormalizujWynik)((0,l.PoparcieWOkregu)(d.sredniaSondazy,t).wynikWOkregu),e=(0,l.PodzialMandatowWOkregu)(a,t),o={PIS:a.PIS,KONF:a.KONF},n=["KO","TD","LEWICA"],r=c.komentarze[t.miasto].rekomendacjePartii||[];for(let t of r)o[t]=a[t]+.3/r.length;if(r.length)for(let t of n)r.includes(t)||(o[t]=a[t]-.3/(n.length-r.length));else for(let t of["KO","TD","LEWICA"])o[t]=a[t];let i=(0,l.PodzialMandatowWOkregu)(o,t);u[t.miasto]=(0,l.NaPolDemo)(e),f[t.miasto]=(0,l.NaDemo)(e);// Tabelka
+let s=(0,d.glosy2019)[t.nr-1].reduce((t,a)=>t+a,0),m=t=>Math.round(s*t/100),p=t=>Math.round(s*t/100%e.cenaMandatu),z=t=>Math.max(0,(p(t)+8)%e.cenaMandatu-10),E=t=>z(t)?e.cenaMandatu-z(t):0;for(let e of(O+=`<tr><td>${t.nr}</td><td>${t.miasto}</td><td>${t.mandaty}</td><td>${s}</td>`,d.PARTIE)){let t=m(a[e]);y[e]+=t,O+=`<td>${t}</td>`}O+=`<td>${e.cenaMandatu}</td>`;let b=t=>Math.round(s*t/100%i.cenaMandatu),j=t=>Math.max(0,(b(t)+8)%i.cenaMandatu-10);for(let t of d.PARTIE)I[t]+=e[t]||0,O+=`<td>${e[t]||0}</td>`;for(let t of d.PARTIE){let e=z(a[t]);P[t]+=e,O+=`<td>${e}</td>`}for(let t of d.PARTIE){let e=E(a[t]);O+=`<td>${e}</td>`}for(let t of(// Wiersz alternatywny
+O+=`</tr><tr><td colspan="4">Podział przy przesunięciu 0.3% głos\xf3w:</td>`,d.PARTIE)){let a=m(o[t]);O+=`<td>${a}</td>`}for(let t of(O+=`<td>${i.cenaMandatu}</td>`,d.PARTIE))h[t]+=i[t]||0,O+=`<td>${i[t]||0}</td>`;for(let t of d.PARTIE){let a=j(o[t]);g[t]+=j(o[t]),O+=`<td>${a}</td>`}O+="</tr>"}),O+=`<tr><td colspan="3">Suma</td><td>${Object.values(y).reduce((t,a)=>t+=a,0)}</td>`,d.PARTIE))O+=`<td>${y[t]}</td>`;for(const t of(O+="<td>-</td>",d.PARTIE))O+=`<td>${I[t]}</td>`;for(const t of d.PARTIE)O+=`<td>${P[t]}</td>`;for(const t of(O+='</tr><tr><td colspan="10">Alternatywny wynik wg. rekomendacji</td>',d.PARTIE))O+=`<td>${h[t]}</td>`;for(const t of d.PARTIE)O+=`<td>${g[t]}</td>`;O+="</tr>",m.innerHTML=O+"</table>",document.getElementById("tabela").appendChild(m),r(u,"mandatyWOkregach",{poziomo:!0,laczOpozycje:!1}),r(f,"mandatyWOkregachDemo",{poziomo:!0,laczOpozycje:!0});//# sourceMappingURL=obliczenia.1ca7df9b.js.map
+
+//# sourceMappingURL=obliczenia.1ca7df9b.js.map
