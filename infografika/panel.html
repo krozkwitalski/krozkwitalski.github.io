@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-97FY31FJHN"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-97FY31FJHN');
+    </script>
+    <meta charset="UTF-8">
+    <title>Panel Gminy</title>
+    <link href="panel.css" rel="stylesheet"/>
+    <link href="inspector.css" rel="stylesheet"/>
+    <script src="budzet.js" lang="javascript"></script>
+    <script type="module">
+
+        import sunburst from "./86ddbc29bd33f9d6@353.js";
+        import sunburst_dochody from "./dochody.js";
+        import bilans from "./e68ad55af4b37234@124.js";
+        import {Runtime, Inspector} from "./runtime.js";
+
+        const runtime = new Runtime();
+        const main = runtime.module(bilans, Inspector.into(document.getElementById('bilans')));
+        const main2 = runtime.module(sunburst, Inspector.into(document.getElementById('sunburst')));
+        const main3 = runtime.module(sunburst_dochody, Inspector.into(document.getElementById('sunburst_dochody')));
+    </script>
+</head>
+<body>
+<h1 id="gmina"></h1>
+<div id="main_section">
+<div class="intro">Liczba mieszkańców: <div id="ludnosc"></div></div>
+<h2 class="intro">Dochody budżetu za rok <strong>2019</strong>:
+    <span id="budzet:dochody" class="pomaranczowy"></span>,<br/>
+    wydatki:
+    <span id="budzet:wydatki" class="pomaranczowy"></span>
+</h2>
+<div id="bilans"></div>
+<span class="intro" hidden>Dochody z UE: <span id="dochod_ue" class="pomaranczowy"></span></span><br/>
+<span class="intro">Wydatki dofinansowane z UE:<br/>
+    Bieżące gminy: <span id="wydatki_biezace_ue" class="pomaranczowy"></span><br/>
+    Inwestycyjne gminy: <span id="wydatki_inwestycje_ue" class="pomaranczowy"></span><br/>
+    <a href="#sekcja_ue" onclick="pokaz_ue();">Dofinansowania UE w gminie od 2014</a>: <span id="dotacje_ue:gmina"></span> (<span id="dotacje_ue:gmina_pc"></span> na mieszkańca)<br/>
+    <span id="dotacje_powiatowe"><span id="dotacje_ue:powiat"></span> udziału w powiatowych (<span id="dotacje_ue:powiat_pc"></span> na mieszkańca)</span><br/>
+    <span id="dotacje_wojewodztwa"><span id="dotacje_ue:wojewodztwo"></span> udziału w wojewódzkich (<span id="dotacje_ue:wojewodztwo_pc"></span> na mieszkańca)<br/></span><br/></span>
+
+    <span class="intro">Gmina zebrała <span id="gospodarka_odpadami_komunalnymi:dochody" class="pomaranczowy"></span>
+    na gospodarkę odpadami komunalnymi, a wydała: <span id="gospodarka_odpadami_komunalnymi:wydatki" class="pomaranczowy"></span></span><br/>
+
+    <span id="janosik:otrzymala" class="intro">Gmina otrzymała <span id="janosik:dochody" class="pomaranczowy"></span>
+        "janosikowego" od samorządów z wysokimi dochodami</span>
+    <span id="janosik:wplacila" class="intro">Gmina wpłaciła <span id="janosik:wydatki" class="pomaranczowy"></span>
+        netto "janosikowego" na rzecz samorządów z niskimi dochodami</span><br/><br/><br/>
+
+<div id="main_display">
+</div>
+<a href="#sekcja_sunburst" onclick="pokaz_sunburst();">Pokaż szczegóły wydatków</a><br/>
+<a href="#sekcja_sunburst_dochody" onclick="pokaz_sunburst_dochody();">Pokaż szczegóły dochodów</a><br/>
+</div>
+<span id="sekcja_dzial" hidden>
+    <a href="javascript:window.history.back();">Wróć do listy działów</a><br/>
+    <h2 class="sekcja_dzial"><span id="name"></span>: <span id="v" class="pomaranczowy"></span> (<span id="procent"></span>%)</h2>
+    <span class="intro">To o <span id="v_zmiana"></span>% <span id="v_kierunek"></span> niż w 2018 roku.</span></br>
+    <span class="intro">W przeliczeniu na 1 mieszkańca to: <span id="v_pc" class="pomaranczowy"></span></span><br/>
+    <span class="intro">czyli o <span id="v_pc_diff_style"><span id="v_pc_diff"></span><span id="v_pc_diff_word"></span></span></span>
+    <span class="intro">niż średnio w Polsce (<span id="pl_v_pc" class="pomaranczowy"></span>)</span><br/><br/>
+    <span class="intro">i o <span id="v_wlk_pc_diff_style"><span id="v_wlk_pc_diff"></span><span id="v_wlk_pc_diff_word"></span></span></span>
+    <span class="intro">niż średnio w gminach <span id="wlk"></span> mieszkańców</span><br/><br/>
+    <span id="rozdzialy"></span>
+</span>
+<span id="sekcja_ue" hidden>
+    <a href="javascript:window.history.back();">Wróć do listy działów</a><br/>
+    <span id="projekty"></span><br/>
+    <h2>Powiatowe</h2>
+    <span id="projekty_pow"></span><br/>
+    <h2>Wojewódzkie</h2>
+    <span id="projekty_woj"></span>
+</span>
+<span id="sekcja_sunburst_dochody" hidden>
+    <a href="javascript:window.history.back();">Wróć do listy działów</a><br/>
+    <div id="sunburst_dochody"></div>
+</span>
+<span id="sekcja_sunburst" hidden>
+    <a href="javascript:window.history.back();">Wróć do listy działów</a><br/>
+    <div id="sunburst"></div>
+</span>
+</body>
+</html>
